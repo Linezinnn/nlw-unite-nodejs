@@ -1,0 +1,30 @@
+POST http://localhost:3333/events
+Content-Type: application/json
+
+{
+  "title": "NLW IA",
+  "details": "Um evento para quem é apaxionado por programação",
+  "maximumAttendees": 1
+}
+
+###
+
+POST http://localhost:3333/events/2a2b72fc-0eef-4960-b8e2-3cf8de9ab171/attendees
+Content-Type: application/json
+
+{
+  "name": "Roberto Carlos",
+  "email": "robertianho@gmail.com"
+}
+
+###
+
+GET http://localhost:3333/events/c7a86a3c-7433-4d8e-ac97-3854d8c41975
+
+###
+
+GET http://localhost:3333/attendees/3/badge
+
+###
+
+GET http://localhost:3333/attendees/3/check-in
