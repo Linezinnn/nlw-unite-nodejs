@@ -28,7 +28,8 @@ export async function getEventAttendees(app: FastifyInstance) {
                 createdAt: z.date(),
                 checkedInAt: z.date().nullable(),
               })
-            )
+            ),
+            total: z.number().int().positive(),
           }),
         },
       }
@@ -46,7 +47,7 @@ export async function getEventAttendees(app: FastifyInstance) {
             select: {
               createdAt: true,
             }
-          }
+          },
         },
         where: query ? {
           eventId,
@@ -63,6 +64,19 @@ export async function getEventAttendees(app: FastifyInstance) {
         }
       })
 
+      const countOfAttendees = await prisma.event.findUnique({
+        select: {
+          _count: {
+            select: {
+              attendees: true,
+            }
+          }
+        },
+        where: {
+          id: eventId,
+        }
+      }) 
+
       return reply.status(200).send({ 
         attendees: attendees.map(attendee => {
           return {
@@ -72,7 +86,8 @@ export async function getEventAttendees(app: FastifyInstance) {
             createdAt: attendee.createdAt,
             checkedInAt: attendee.checkIn?.createdAt ?? null,
           }
-        })
+        }),
+        total: countOfAttendees?._count.attendees || 0,
       })
     })
 }
